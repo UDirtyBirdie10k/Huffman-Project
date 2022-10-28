@@ -34,7 +34,7 @@ public class HuffmanCoding {
      */
     public void makeSortedList() {
         StdIn.setFile(fileName);
-
+        lol:
 	/* Your code goes here */
     }
 
