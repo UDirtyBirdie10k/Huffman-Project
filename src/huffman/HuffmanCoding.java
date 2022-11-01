@@ -34,8 +34,36 @@ public class HuffmanCoding {
      */
     public void makeSortedList() {
         StdIn.setFile(fileName);
-        lol:
-	/* Your code goes here */
+        ArrayList<Character> listChars = new ArrayList<Character>(128);        //array list for characters
+        ArrayList<Double> listDoubles = new ArrayList<Double>(128);            //array list for doubles
+        double total = 0.0;                                                 //total count for characters
+        boolean exists = false;                                             //boolean for a certain character in listChars
+        
+        while(StdIn.hasNextChar() ){
+            Character tempChar =  StdIn.readChar();
+            exists = false;
+            for(int i = 0; i < listChars.size(); i++){
+                if(listChars.get(i) == tempChar){
+                    exists = true;
+                    listDoubles.set(i, + 1.0);
+                    // double num = listDoubles.get(i);
+                    // num++;
+                    // listDoubles.set(i,num);
+                }
+            }
+            if(exists == false){
+                listChars.add(tempChar);
+                listDoubles.add(1.0);
+            }
+
+            total += 1.0;
+
+        }
+
+        if(listChars.size() == 1){
+
+        }
+
     }
 
     /**
