@@ -34,10 +34,11 @@ public class HuffmanCoding {
      */
     public void makeSortedList() {
         StdIn.setFile(fileName);
+        sortedCharFreqList = new ArrayList<CharFreq>();
         ArrayList<Character> listChars = new ArrayList<Character>(128);        //array list for characters
         ArrayList<Double> listDoubles = new ArrayList<Double>(128);            //array list for doubles
-        double total = 0.0;                                                 //total count for characters
-        boolean exists = false;                                             //boolean for a certain character in listChars
+        double total = 0.0;                                                                    //total count for characters
+        boolean exists = false;                                                               //boolean for a certain character in listChars
         
         while(StdIn.hasNextChar() ){
             Character tempChar =  StdIn.readChar();
@@ -45,7 +46,7 @@ public class HuffmanCoding {
             for(int i = 0; i < listChars.size(); i++){
                 if(listChars.get(i) == tempChar){
                     exists = true;
-                    listDoubles.set(i, + 1.0);
+                    listDoubles.set(i, listDoubles.get(i) + 1.0);
                     // double num = listDoubles.get(i);
                     // num++;
                     // listDoubles.set(i,num);
@@ -56,14 +57,32 @@ public class HuffmanCoding {
                 listDoubles.add(1.0);
             }
 
-            total += 1.0;
+            total ++;
 
         }
 
         if(listChars.size() == 1){
-
+            char character = listChars.get(0);
+            int ascii = character; 
+            if(ascii == 127){
+                ascii = 0;
+            }
+            
+            ascii += 1;
+            
+            char a = (char) ascii;
+            CharFreq temp = new CharFreq(a, 0.0);
+            sortedCharFreqList.add(temp);
+            
         }
 
+        for(int i = 0; i < listChars.size(); i++){
+            double prob = listDoubles.get(i)/total;
+            CharFreq finalChar = new CharFreq(listChars.get(i),prob);
+            sortedCharFreqList.add(finalChar);
+
+        }
+        Collections.sort(sortedCharFreqList);
     }
 
     /**
@@ -71,8 +90,74 @@ public class HuffmanCoding {
      * in huffmanRoot
      */
     public void makeTree() {
+        Queue<TreeNode> source = new Queue<TreeNode>();
+        Queue<TreeNode> target = new Queue<TreeNode>();
 
-	/* Your code goes here */
+        TreeNode left = null;
+        TreeNode right = null;
+
+        for(int i = 0; i < sortedCharFreqList.size(); i++){
+            CharFreq temp = sortedCharFreqList.get(i);
+            TreeNode tempNode = new TreeNode(temp, null, null);
+            source.enqueue(tempNode);
+        }
+
+        while(!source.isEmpty() || target.size() != 1){
+            
+            CharFreq parent = new CharFreq();
+
+            if(target.isEmpty()){
+                left = source.dequeue();
+                right = source.dequeue();
+                parent = new CharFreq(null, left.getData().getProbOcc() + right.getData().getProbOcc() );
+                TreeNode huffNode = new TreeNode(parent, left, right);
+                target.enqueue(huffNode);
+
+            }
+            
+            else{
+                for(int i = 0; i < 2; i++){
+                    if(i == 0){
+                        if(source.isEmpty()){
+                            left = target.dequeue();
+                            right = target.dequeue();
+                        }
+                        if(source.peek().getData().getProbOcc() <= target.peek().getData().getProbOcc()){
+                                left = source.dequeue();
+                            }   
+                            else{
+                                right = target.dequeue();
+                            }
+                    }
+                    if(i == 1){
+                            if(source.isEmpty()){
+                                right = target.dequeue();
+                                break;
+                            }
+                            if(target.isEmpty()){
+                                right = source.dequeue();
+                                break;
+                            }
+                                if(source.peek().getData().getProbOcc() <= target.peek().getData().getProbOcc()){
+                                    right = source.dequeue();
+                                }   
+                                else{
+                                    left = target.dequeue();
+                                }
+                        
+                    }
+
+                }
+                parent = new CharFreq(null, left.getData().getProbOcc() + right.getData().getProbOcc() );
+                TreeNode huffNode = new TreeNode(parent, left, right);
+                target.enqueue(huffNode);
+
+            }
+           
+
+        }
+
+
     }
 
     /**
