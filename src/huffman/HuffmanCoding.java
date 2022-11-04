@@ -110,8 +110,8 @@ public class HuffmanCoding {
                 left = source.dequeue();
                 right = source.dequeue();
                 parent = new CharFreq(null, left.getData().getProbOcc() + right.getData().getProbOcc() );
-                TreeNode huffNode = new TreeNode(parent, left, right);
-                target.enqueue(huffNode);
+                huffmanRoot = new TreeNode(parent, left, right);
+                target.enqueue(huffmanRoot);
 
             }
             
@@ -121,15 +121,16 @@ public class HuffmanCoding {
                         if(source.isEmpty()){
                             left = target.dequeue();
                             right = target.dequeue();
+                            break;
                         }
-                        if(source.peek().getData().getProbOcc() <= target.peek().getData().getProbOcc()){
-                                left = source.dequeue();
-                            }   
-                            else{
-                                right = target.dequeue();
-                            }
+                            if(source.peek().getData().getProbOcc() <= target.peek().getData().getProbOcc()){
+                                    left = source.dequeue();
+                                }   
+                                else{
+                                    left = target.dequeue();
+                                }
                     }
-                    if(i == 1){
+                        if(i == 1){
                             if(source.isEmpty()){
                                 right = target.dequeue();
                                 break;
@@ -138,19 +139,19 @@ public class HuffmanCoding {
                                 right = source.dequeue();
                                 break;
                             }
-                                if(source.peek().getData().getProbOcc() <= target.peek().getData().getProbOcc()){
-                                    right = source.dequeue();
-                                }   
-                                else{
-                                    left = target.dequeue();
-                                }
+                            if(source.peek().getData().getProbOcc() <= target.peek().getData().getProbOcc()){
+                                right = source.dequeue();
+                            }   
+                            else{
+                                right = target.dequeue();
+                            }
                         
                     }
 
                 }
                 parent = new CharFreq(null, left.getData().getProbOcc() + right.getData().getProbOcc() );
-                TreeNode huffNode = new TreeNode(parent, left, right);
-                target.enqueue(huffNode);
+                huffmanRoot = new TreeNode(parent, left, right);
+                target.enqueue(huffmanRoot);
 
             }
            
