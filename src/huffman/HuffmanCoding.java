@@ -169,8 +169,39 @@ public class HuffmanCoding {
      */
     public void makeEncodings() {
 
-	/* Your code goes here */
+        String[] code = new String[128];
+        ArrayList<String> bits = new ArrayList<>();
+        helperMethod(huffmanRoot, code, bits);
+        encodings = code;
     }
+
+        private void helperMethod(TreeNode huffmanRoot, String[] code, ArrayList<String> bits){
+            if(huffmanRoot.getData().getCharacter() != null){
+                code[huffmanRoot.getData().getCharacter()] = String.join("", bits);
+                bits.remove(bits.size() - 1);
+                return;
+            }
+        
+
+        if(huffmanRoot.getLeft() != null){
+            bits.add("0");
+
+        }
+
+        helperMethod(huffmanRoot.getLeft(), code, bits);
+
+        if(huffmanRoot.getRight() != null){
+            bits.add("1");
+        }
+        
+        helperMethod(huffmanRoot.getRight(), code, bits);
+        if(bits.isEmpty()){
+            return;
+        }
+        bits.remove(bits.size() - 1);
+
+    }
+
 
     /**
      * Using encodings and filename, this method makes use of the writeBitString method
@@ -181,7 +212,16 @@ public class HuffmanCoding {
     public void encode(String encodedFile) {
         StdIn.setFile(fileName);
 
-	/* Your code goes here */
+        makeEncodings();
+
+        String bit = "";
+        while(StdIn.hasNextChar() ){
+            bit += encodings[StdIn.readChar()];
+
+        }
+
+        writeBitString(encodedFile, bit);
+
     }
     
     /**
@@ -246,7 +286,23 @@ public class HuffmanCoding {
     public void decode(String encodedFile, String decodedFile) {
         StdOut.setFile(decodedFile);
 
-	/* Your code goes here */
+        makeEncodings();
+        String bit = readBitString(encodedFile);
+        TreeNode root = huffmanRoot;
+        for( Character strings : bit.toCharArray() ){
+            if (strings == '0'){
+                root = root.getLeft();
+            }
+            if (strings == '1'){
+                root = root.getRight();
+            }
+            if(root.getData().getCharacter() != null){
+                StdOut.print(root.getData().getCharacter() );
+                root = huffmanRoot;
+            }
+        }
+
+
     }
 
     /**
